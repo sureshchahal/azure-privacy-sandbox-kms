@@ -1,0 +1,10 @@
+{
+    "actions": [
+        {
+            "name": "set_js_app",
+            "args": {
+                "bundle": ${JS_BUNDLE}
+            }
+        }
+    ]
+}
