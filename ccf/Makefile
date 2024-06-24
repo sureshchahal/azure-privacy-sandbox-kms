@@ -10,13 +10,29 @@ SERVICE_CERT := $(shell awk 'ORS=(NR>1 && /^$$/)?"" : "\\n"' certs/service_cert.
 MEMBER0_ID := $(shell cat certs/member0_id)
 MEMBER_CERT=$(shell awk 'ORS=(NR>1 && /^$$/)?"" : "\\n"' certs/member0_cert.pem)
 
-network-start:
+certs-gen:
 	@echo -e "\e[34m$@\e[0m" || true
-	./scripts/network_start.sh
+	docker compose run keygenerator
 
-network-stop:
+network-local-start:
 	@echo -e "\e[34m$@\e[0m" || true
-	./scripts/network_stop.sh
+	./scripts/network_local_start.sh
+
+network-local-stop:
+	@echo -e "\e[34m$@\e[0m" || true
+	./scripts/network_local_stop.sh
+
+network-deploy: # TBD
+	@echo -e "\e[34m$@\e[0m" || true
+	az deployment group create \
+		--name $(name) \
+		--resource-group ${RESOURCE_GROUP} \
+		--template-file ccf.bicep \
+		--parameters ccf.bicepparam
+
+network-info:
+	@echo -e "\e[34m$@\e[0m" || true
+	./scripts/network_info.sh
 
 network-open:
 	@echo -e "\e[34m$@\e[0m" || true

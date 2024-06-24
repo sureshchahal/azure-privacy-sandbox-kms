@@ -9,6 +9,7 @@ COPY --from=builder /opt/ccf_${CCF_PLATFORM}/lib/libjs_generic.${CCF_PLATFORM}.s
 COPY --from=builder /opt/ccf_${CCF_PLATFORM}/bin/*.js /app/
 COPY --from=builder /opt/ccf_${CCF_PLATFORM}/bin/keygenerator.sh /app/
 COPY ./config/cchost_config_${CCF_PLATFORM}.json /app/
+COPY ./certs /app/certs
 WORKDIR /app/
 
 EXPOSE 8080/tcp
