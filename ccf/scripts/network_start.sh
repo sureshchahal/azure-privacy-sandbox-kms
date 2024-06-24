@@ -30,3 +30,9 @@ echo "  Initial Member ID: $member_id"
 echo $member_id > certs/member0_id
 
 curl -k https://localhost:8080/node/network --silent | jq -r '.service_certificate' > certs/service_cert.pem
+
+echo "Network started and is in the 'opening' state"
+echo "Next Steps: "
+echo "  Activate the initial member with:"
+echo "    'make member-activate member-id=$member_id'"
+echo "  Open the network with 'make network-open'"
