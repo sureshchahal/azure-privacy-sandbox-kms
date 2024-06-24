@@ -12,8 +12,12 @@ if [ -z "$CCF_PLATFORM" ]; then
     echo "CCF_PLATFORM is not set."
     exit 1
 fi
+if [ -z "$REGISTRY" ]; then
+    export REGISTRY="local"
+fi
 
 echo "Running ${CCF_PLATFORM}-ccf container"
+mkdir -p certs
 logs=$(docker compose run --build -d $CCF_PLATFORM-ccf 2>&1)
 container_id=$(echo $logs | awk '{print $NF}')
 echo "  Container ID: $container_id"
@@ -30,6 +34,7 @@ echo "  Initial Member ID: $member_id"
 echo $member_id > certs/member0_id
 
 curl -k https://localhost:8080/node/network --silent | jq -r '.service_certificate' > certs/service_cert.pem
+sudo chown -R $USER certs
 
 echo "Network started and is in the 'opening' state"
 echo "Next Steps: "
