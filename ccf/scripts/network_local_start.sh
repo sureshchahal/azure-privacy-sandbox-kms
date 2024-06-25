@@ -29,15 +29,17 @@ until check_logs; do
     sleep 1
 done
 
-member_id=$(curl -k https://localhost:8080/gov/members --silent | jq -r 'keys | .[0]')
-echo "  Initial Member ID: $member_id"
-echo $member_id > certs/member0_id
-
-curl -k https://localhost:8080/node/network --silent | jq -r '.service_certificate' > certs/service_cert.pem
+curl -k https://$NODE_ADDRESS/node/network --silent | jq -r '.service_certificate' > certs/service_cert.pem
 sudo chown -R $USER certs
 
-echo "Network started and is in the 'opening' state"
-echo "Next Steps: "
-echo "  Activate the initial member with:"
-echo "    'make member-activate member-id=$member_id'"
-echo "  Open the network with 'make network-open'"
+echo "To activate the initial member, run:"
+echo "  make member-activate member=certs/member0"
+echo ""
+echo "When you're ready, open the network with:"
+echo "  make network-open"
+echo ""
+echo "Once the network is open, you can:"
+echo "  - Update the default constitution with:"
+echo "      make constitution-update"
+echo "  - Deploy application code with:"
+echo "      make app-deploy"

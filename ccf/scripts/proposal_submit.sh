@@ -26,6 +26,9 @@ else
   cat $1 | envsubst > /tmp/request.json
 fi
 
+cat /tmp/request.json \
+  | awk '{print substr($0, 1, 400) (length($0) > 400 ? "..." : "")}'
+
 MSG_TYPE=proposal \
 CONTENT_PATH=/tmp/request.json \
 METHOD="POST" \

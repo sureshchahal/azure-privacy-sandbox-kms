@@ -12,7 +12,5 @@ COPY ./config/cchost_config_${CCF_PLATFORM}.json /app/
 COPY ./certs /app/certs
 WORKDIR /app/
 
-EXPOSE 8080/tcp
-
 ENV CCF_PLATFORM=${CCF_PLATFORM}
 CMD ["/bin/bash", "-c", "/usr/bin/cchost --config /app/cchost_config_${CCF_PLATFORM}.json"]

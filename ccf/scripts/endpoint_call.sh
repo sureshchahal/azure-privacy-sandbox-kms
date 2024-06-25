@@ -21,6 +21,9 @@ fi
 if [ -z "$METHOD" ]; then
     METHOD="GET"
 fi
+if [ -z "$MEMBER" ]; then
+    MEMBER="certs/member0"
+fi
 
 if [ -z "$1" ]; then
     echo "Please call with a positional arg for the endpoint to call"
@@ -34,14 +37,14 @@ else
     ccf_cose_sign1 \
     --ccf-gov-msg-type $MSG_TYPE \
     --ccf-gov-msg-created_at `date -uIs` \
-    --signing-key certs/member0_privk.pem \
-    --signing-cert certs/member0_cert.pem \
+    --signing-key ${MEMBER}_privk.pem \
+    --signing-cert ${MEMBER}_cert.pem \
     --content $CONTENT_PATH \
     | curl -k https://$NODE_ADDRESS/$ENDPOINT \
     -X $METHOD \
     -H "content-type: application/cose" \
     --data-binary @- \
-    --cacert service_cert.pem \
-    --key certs/member0_privk.pem \
-    --cert certs/member0_cert.pem
+    --cacert certs/service_cert.pem \
+    --key ${MEMBER}_privk.pem \
+    --cert ${MEMBER}_cert.pem
 fi
