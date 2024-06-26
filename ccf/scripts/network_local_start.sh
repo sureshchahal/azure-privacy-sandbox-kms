@@ -17,7 +17,6 @@ if [ -z "$REGISTRY" ]; then
 fi
 
 echo "Running ${CCF_PLATFORM}-ccf container"
-mkdir -p certs
 logs=$(docker compose run --build -d $CCF_PLATFORM-ccf 2>&1)
 container_id=$(echo $logs | awk '{print $NF}')
 echo "  Container ID: $container_id"

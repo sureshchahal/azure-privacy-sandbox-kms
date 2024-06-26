@@ -1,0 +1,14 @@
+{
+    "actions": [
+        {
+            "name": "set_jwt_issuer",
+            "args": {
+                "issuer": "${JWT_ISSUER}",
+                "key_filter": "all",
+                "jwks": {
+                    "keys": ${JWKS}
+                }
+            }
+        }
+    ]
+}

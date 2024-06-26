@@ -7,13 +7,19 @@ CCF_PLATFORM ?= virtual
 TAG ?= latest
 
 SERVICE_CERT := $(shell awk 'ORS=(NR>1 && /^$$/)?"" : "\\n"' certs/service_cert.pem)
-CONSTITUTION := "$(shell curl -k https://localhost:8080/gov/service/constitution?api-version=2023-06-01-preview --silent | jq -Rs | sed 's/\(.*\)"/\1/' | sed 's/"//')$(shell cat ../governance/constitution/* | jq -Rs | sed 's/\(.*\)"/\1/' | sed 's/"//')"
+CONSTITUTION := "$(shell curl -k https://localhost:8000/gov/service/constitution?api-version=2023-06-01-preview --silent | jq -Rs | sed 's/\(.*\)"/\1/' | sed 's/"//')$(shell cat ../governance/constitution/* | jq -Rs | sed 's/\(.*\)"/\1/' | sed 's/"//')"
 
 id-of:
 	@openssl x509 -in $(member) -noout -fingerprint -sha256 \
 		| cut -d "=" -f 2 \
 		| sed 's/://g' \
 		| awk '{print tolower($$0)}'
+
+jwk-of:
+	@pem-jwk $(private-key) | jq \
+		--arg cert "$(shell cat $(cert))" \
+		--arg kid "$(kid)" \
+		'{kty, n, e} + {x5c: [$$cert]} + {kid: $$kid}'
 
 certs-gen:
 	@echo -e "\e[34m$@\e[0m" || true
@@ -71,3 +77,7 @@ constitution-update:
 key-release-policy-add:
 	@echo -e "\e[34m$@\e[0m" || true
 	./scripts/proposal_submit.sh proposals/key_release_policy_add.json
+
+jwt-issuer-set:
+	@echo -e "\e[34m$@\e[0m" || true
+	./scripts/proposal_submit.sh proposals/jwt_issuer_set.json

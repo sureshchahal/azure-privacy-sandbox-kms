@@ -8,8 +8,8 @@ set -e
 IS_COSE=0
 
 if [ -z "$NODE_ADDRESS" ]; then
-    echo "NODE_ADDRESS is not set. Defaulting to localhost:8080"
-    NODE_ADDRESS="localhost:8080"
+    echo "NODE_ADDRESS is not set. Defaulting to localhost:8000"
+    NODE_ADDRESS="localhost:8000"
 fi
 if [ -n "$MSG_TYPE" ]; then
     IS_COSE=1
