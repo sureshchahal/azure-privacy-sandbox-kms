@@ -45,15 +45,15 @@ network-open:
 	@echo -e "\e[34m$@\e[0m" || true
 	./scripts/proposal_submit.sh proposals/network_open.json
 
-user-add:
+user-set:
 	@echo -e "\e[34m$@\e[0m" || true
 	echo tbd
 
-member-add:
+member-set:
 	@echo -e "\e[34m$@\e[0m" || true
 	MEMBER_CERT="$(shell awk 'ORS=(NR>1 && /^$$/)?"" : "\\n"' $(member)_cert.pem)\n" \
 	MEMBER_PUB_KEY="$(shell awk 'ORS=(NR>1 && /^$$/)?"" : "\\n"' $(member)_enc_pubk.pem)\n" \
-	./scripts/proposal_submit.sh proposals/member_add.json
+	./scripts/proposal_submit.sh proposals/member_set.json
 
 member-activate:
 	@echo -e "\e[34m$@\e[0m" || true
@@ -62,9 +62,9 @@ member-activate:
 	MSG_TYPE=ack CONTENT_PATH=/tmp/request.json METHOD=POST MEMBER=$(member) ./scripts/endpoint_call.sh \
 		gov/members/state-digests/$(shell make id-of member=$(member)_cert.pem):ack?api-version=2023-06-01-preview
 
-app-deploy:
+app-set:
 	@echo -e "\e[34m$@\e[0m" || true
-	./scripts/proposal_submit.sh proposals/app_deploy.json
+	./scripts/proposal_submit.sh proposals/app_set.json
 
 constitution-get:
 	@echo -e "\e[34m$@\e[0m" || true
