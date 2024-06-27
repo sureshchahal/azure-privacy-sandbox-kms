@@ -13,7 +13,7 @@ else
     MEMBER_COUNT := 1
 endif
 
-CCF_SANDBOX_EXTRA_ARGS ?= 
+CCF_SANDBOX_EXTRA_ARGS ?=
 
 ifeq ($(INSTALL),local)
     CCFSB=../../CCF/tests/sandbox
@@ -96,7 +96,7 @@ propose-rm-key-release-policy: ## 🚀 Deploy the remove claim key release polic
 	@CCF_PLATFORM=${CCF_PLATFORM} ./scripts/submit_proposal.sh --network-url "${KMS_URL}" --proposal-file ./governance/policies/key-release-policy-remove.json --certificate_dir "${KEYS_DIR}"
 
 refresh-key: ## 🚀 Refresh a key on the instance
-	@echo -e "\e[34m$@\e[0m" || true	
+	@echo -e "\e[34m$@\e[0m" || true
 	$(call check_defined, KMS_URL)
 	@CCF_PLATFORM=${CCF_PLATFORM} sleep 20;curl "${KMS_URL}"/app/refresh -X POST --cacert "${KEYS_DIR}"/service_cert.pem  -H "Content-Type: application/json" -i  -w '\n'
 
@@ -121,6 +121,64 @@ deploy: build ## 🚀 Deploy Managed CCF or local
 lint: ## 🔍 Lint the code base (but don't fix)
 	@echo -e "\e[34m$@\e[0m" || true
 	@CCF_PLATFORM=${CCF_PLATFORM} ./scripts/lint.sh --fix
+
+jwt-issuer-proposal:
+	@echo -e ' \
+	{ \
+	"actions": [ \
+		{ \
+			"name": "set_jwt_issuer", \
+			"args": { \
+				"issuer": "http://Demo-jwt-issuer", \
+				"key_filter": "all", \
+				"jwks": { \
+					"keys": [ \
+						$(shell pem-jwk ${KMS_WORKSPACE}/private.pem | jq --arg cert "$(shell cat ${KMS_WORKSPACE}/cert.pem)" '{kty, n, e} + {x5c: [$$cert]} + {kid: "Demo IDP kid"}') \
+					] \
+				} \
+			} \
+		} \
+	] \
+} \
+' | sed 's/\\//g'
+
+start-ccf: ## 🏃 Start the CCF network
+	@echo -e "\e[34m$@\e[0m" || true
+	mkdir -p ./certs && sudo chmod 777 -R ./certs
+	python -m ccf_management.participant_create \
+		--certs-dir ./certs \
+		--participant-name member0
+	python -m ccf_management.service_create \
+		--certs-dir ./certs \
+		--participant-name member0
+	python -m ccf_management.member_activate \
+		--certs-dir ./certs \
+		--participant-name member0
+	python -m ccf_management.service_open \
+		--certs-dir ./certs \
+		--participant-name member0
+	python -m ccf_management.constitution_update \
+		--certs-dir ./certs \
+		--participant-name member0 \
+		--constitution-fragment ./governance/constitution/kms_actions.js
+	python -m ccf_management.js_app_set \
+		--certs-dir ./certs \
+		--participant-name member0 \
+		--js-app-bundle ./dist/bundle.json
+	python -m ccf_management.proposal_submit \
+		--certs-dir ./certs \
+		--participant-name member0 \
+		--proposal ./governance/policies/key-release-policy-add.json
+	python -m ccf_management.proposal_submit \
+		--certs-dir ./certs \
+		--participant-name member0 \
+		--proposal jwt_issuer_proposal.json
+	curl -k https://localhost:8000/app/refresh -X POST
+
+
+stop-ccf: ## 🏃 Start the CCF network
+	@echo -e "\e[34m$@\e[0m" || true
+	python -m ccf_management.service_remove
 
 # Keep this at the bottom.
 clean: ## 🧹 Clean the working folders created during build/demo
