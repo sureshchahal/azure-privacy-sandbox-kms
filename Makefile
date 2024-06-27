@@ -144,10 +144,11 @@ jwt-issuer-proposal:
 
 start-ccf: ## 🏃 Start the CCF network
 	@echo -e "\e[34m$@\e[0m" || true
-	mkdir -p ./certs && sudo chmod 777 -R ./certs
+	mkdir -p ./certs
 	python -m ccf_management.participant_create \
 		--certs-dir ./certs \
 		--participant-name member0
+	sudo chmod 777 -R ./certs
 	python -m ccf_management.service_create \
 		--certs-dir ./certs \
 		--participant-name member0
