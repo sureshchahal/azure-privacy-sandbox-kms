@@ -137,7 +137,7 @@ jwt-issuer-proposal:
 				"key_filter": "all", \
 				"jwks": { \
 					"keys": [ \
-						$(shell pem-jwk ${KMS_WORKSPACE}/private.pem | jq --arg cert "$(shell cat ${KMS_WORKSPACE}/cert.pem)" '{kty, n, e} + {x5c: [$$cert]} + {kid: "Demo IDP kid"}') \
+						$(shell npx pem-jwk ${KMS_WORKSPACE}/private.pem | jq --arg cert "$(shell cat ${KMS_WORKSPACE}/cert.pem)" '{kty, n, e} + {x5c: [$$cert]} + {kid: "Demo IDP kid"}') \
 					] \
 				} \
 			} \
@@ -159,7 +159,7 @@ jwt-issuer-proposal:
 				"issuer": "http://Demo-jwt-issuer", \
 				"jwks": { \
 					"keys": [ \
-						$(shell pem-jwk ${KMS_WORKSPACE}/private.pem | jq --arg cert "$(shell cat ${KMS_WORKSPACE}/cert.pem)" '{kty, n, e} + {x5c: [$$cert]} + {kid: "Demo IDP kid"}') \
+						$(shell npx pem-jwk ${KMS_WORKSPACE}/private.pem | jq --arg cert "$(shell cat ${KMS_WORKSPACE}/cert.pem)" '{kty, n, e} + {x5c: [$$cert]} + {kid: "Demo IDP kid"}') \
 					] \
 				} \
 			} \
