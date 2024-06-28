@@ -122,6 +122,10 @@ lint: ## 🔍 Lint the code base (but don't fix)
 	@echo -e "\e[34m$@\e[0m" || true
 	@CCF_PLATFORM=${CCF_PLATFORM} ./scripts/lint.sh --fix
 
+install-ccf-python:
+	@echo -e "\e[34m$@\e[0m" || true
+	@pip install ccf
+
 jwt-issuer-proposal:
 	@echo -e ' \
 	{ \
@@ -164,7 +168,7 @@ jwt-issuer-proposal:
 } \
 ' | sed 's/\\//g'
 
-start-ccf: ## 🏃 Start the CCF network
+start-ccf: build install-ccf-python ## 🏃 Start the CCF network
 	@echo -e "\e[34m$@\e[0m" || true
 	mkdir -p ./certs
 	python -m ccf_management.participant_create \

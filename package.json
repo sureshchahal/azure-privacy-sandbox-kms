@@ -52,7 +52,8 @@
     "ts-node": "^10.9.2",
     "tslib": "^2.0.1",
     "typescript": "^5.4.5",
-    "uglify-js": "^3.17.4"
+    "uglify-js": "^3.17.4",
+    "pem-jwk": "^2.0.0"
   },
   "jest": {
     "collectCoverage": false,
