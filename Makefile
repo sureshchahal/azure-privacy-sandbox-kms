@@ -171,32 +171,32 @@ jwt-issuer-proposal:
 start-ccf: build install-ccf-python ## 🏃 Start the CCF network
 	@echo -e "\e[34m$@\e[0m" || true
 	mkdir -p ./certs
-	python -m ccf_management.participant_create \
+	python -m conf_ops.participant_create \
 		--certs-dir ./certs \
 		--participant-name member0
 	sudo chmod 777 -R ./certs
-	python -m ccf_management.service_create \
+	python -m conf_ops.service_create \
 		--certs-dir ./certs \
 		--participant-name member0
-	python -m ccf_management.member_activate \
+	python -m conf_ops.member_activate \
 		--certs-dir ./certs \
 		--participant-name member0
-	python -m ccf_management.service_open \
+	python -m conf_ops.service_open \
 		--certs-dir ./certs \
 		--participant-name member0
-	python -m ccf_management.constitution_update \
+	python -m conf_ops.constitution_update \
 		--certs-dir ./certs \
 		--participant-name member0 \
 		--constitution-fragment ./governance/constitution/kms_actions.js
-	python -m ccf_management.js_app_set \
+	python -m conf_ops.js_app_set \
 		--certs-dir ./certs \
 		--participant-name member0 \
 		--js-app-bundle ./dist/bundle.json
-	python -m ccf_management.proposal_submit \
+	python -m conf_ops.proposal_submit \
 		--certs-dir ./certs \
 		--participant-name member0 \
 		--proposal ./governance/policies/key-release-policy-add.json
-	python -m ccf_management.proposal_submit \
+	python -m conf_ops.proposal_submit \
 		--certs-dir ./certs \
 		--participant-name member0 \
 		--proposal jwt_issuer_proposal.json
@@ -205,7 +205,7 @@ start-ccf: build install-ccf-python ## 🏃 Start the CCF network
 
 stop-ccf: ## 🏃 Start the CCF network
 	@echo -e "\e[34m$@\e[0m" || true
-	python -m ccf_management.service_remove
+	python -m conf_ops.service_remove
 
 # Keep this at the bottom.
 clean: ## 🧹 Clean the working folders created during build/demo
