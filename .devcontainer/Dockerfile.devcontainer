@@ -6,11 +6,11 @@ ARG ENVIRONMENT=devcontainer
 
 # ignore this hadolint error as BASE_IMAGE contains an image tag
 # hadolint ignore=DL3006
-FROM mcr.microsoft.com/ccf/app/dev:${BASE_CCF_IMAGE} as base
+FROM mcr.microsoft.com/ccf/app/dev:${BASE_CCF_IMAGE} AS  kms.devcontainer
 
-ENV NVM_DIR /root/.nvm
+ENV NVM_DIR=/root/.nvm
 ENV TINKEY_VERSION=tinkey-1.10.1
-COPY .devcontainer/install_packages.sh .devcontainer/install_nodejs.sh .devcontainer/setup_tinkey.sh /src/
+COPY requirements.txt .devcontainer/install_packages.sh .devcontainer/install_nodejs.sh .devcontainer/setup_tinkey.sh /src/
 
 # "Install necessary packages."
 RUN /src/install_packages.sh
